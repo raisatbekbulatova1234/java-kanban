@@ -4,26 +4,25 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 public interface TaskManager {
 
     void setCounterOfTasks();
 
-    HashMap<Integer, Epic> getEpicHashMap();
+   /* Map<Integer, Epic> getEpicHashMap();
 
-    HashMap<Integer, Task> getTaskHashMap();
+    Map<Integer, Task> getTaskHashMap();
 
-    HashMap<Integer, Subtask> getSubtaskHashMap();
+    Map<Integer, Subtask> getSubtaskHashMap();*/
 
     int getCounterOfTasks();
 
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
-    ArrayList<Subtask> getAllSubtasks();
+    List<Subtask> getAllSubtasks();
 
     void deleteAllTasks();
 
@@ -55,9 +54,7 @@ public interface TaskManager {
 
     void deleteSubtaskById(int id);
 
-    ArrayList<Subtask> getAllSubtaskFromEpic(int epicId);
+    List<Subtask> getAllSubtaskFromEpic(int epicId);
 
-    void updateEpicStatus(int epicId);
-
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }

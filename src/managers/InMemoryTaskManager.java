@@ -7,13 +7,15 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private int counterOfTasks = 0;
 
-    private HashMap<Integer, Task> taskHashMap = new HashMap<>();
-    private HashMap<Integer, Epic> epicHashMap = new HashMap<>();
-    private HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
+    private Map<Integer, Task> taskHashMap = new HashMap<>();
+    private Map<Integer, Epic> epicHashMap = new HashMap<>();
+    private Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
 
     private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
@@ -23,39 +25,24 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public HashMap<Integer, Epic> getEpicHashMap() {
-        return epicHashMap;
-    }
-
-    @Override
-    public HashMap<Integer, Task> getTaskHashMap() {
-        return taskHashMap;
-    }
-
-    @Override
-    public HashMap<Integer, Subtask> getSubtaskHashMap() {
-        return subtaskHashMap;
-    }
-
-    @Override
     public int getCounterOfTasks() {
         return counterOfTasks;
     }
 
     @Override
-    public ArrayList<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         System.out.println("Вот список всех задач :");
         return new ArrayList<>(taskHashMap.values());
     }
 
     @Override
-    public ArrayList<Epic> getAllEpics() {
+    public List<Epic> getAllEpics() {
         System.out.println("Вот список всех эпиков :");
         return new ArrayList<>(epicHashMap.values());
     }
 
     @Override
-    public ArrayList<Subtask> getAllSubtasks() {
+    public List<Subtask> getAllSubtasks() {
         System.out.println("Вот список всех подзадач :");
         return new ArrayList<>(subtaskHashMap.values());
     }
@@ -82,20 +69,32 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        inMemoryHistoryManager.addTask(taskHashMap.get(id));
-        return taskHashMap.getOrDefault(id, null);
+        if (taskHashMap.containsKey(id)) {
+            inMemoryHistoryManager.addTask(taskHashMap.get(id));
+            return taskHashMap.get(id);
+        }
+        System.out.println(STR."Задачи по id - \{id} не обнаружено!");
+        return null;
     }
 
     @Override
     public Task getEpicById(int id) {
-        inMemoryHistoryManager.addTask(epicHashMap.get(id));
-        return epicHashMap.getOrDefault(id, null);
+        if (epicHashMap.containsKey(id)) {
+            inMemoryHistoryManager.addTask(epicHashMap.get(id));
+            return epicHashMap.get(id);
+        }
+        System.out.println(STR."Эпика по id - \{id} не обнаружено!");
+        return null;
     }
 
     @Override
     public Task getSubtaskById(int id) {
-        inMemoryHistoryManager.addTask(subtaskHashMap.get(id));
-        return subtaskHashMap.getOrDefault(id, null);
+        if (subtaskHashMap.containsKey(id)) {
+            inMemoryHistoryManager.addTask(subtaskHashMap.get(id));
+            return subtaskHashMap.get(id);
+        }
+        System.out.println(STR."Сабтаски по id - \{id} не обнаружено!");
+        return null;
     }
 
 
@@ -188,8 +187,7 @@ public class InMemoryTaskManager implements TaskManager {
         return subtasks;
     }
 
-    @Override
-    public void updateEpicStatus(int epicId) {
+    private void updateEpicStatus(int epicId) {
         int counterNew = 0;
         int counterDone = 0;
 
@@ -223,7 +221,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
     }
 }
