@@ -19,9 +19,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
-    @Override
-    public void setCounterOfTasks() {
-        counterOfTasks++;
+    private void setCounterOfTasks() {
+        this.counterOfTasks++;
     }
 
     @Override
@@ -178,7 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Subtask> getAllSubtaskFromEpic(int epicId) {
+    public List<Subtask> getAllSubtaskFromEpic(int epicId) {
         ArrayList<Subtask> subtasks = new ArrayList<>();
         for (Integer id : epicHashMap.get(epicId).getListSubtask()) {
             Subtask subtask = subtaskHashMap.get(id);

@@ -79,7 +79,7 @@ public class Main {
                 String descriptionSubtask = scanner.nextLine();
                 int epicId = taskManager.getCounterOfTasks();
                 Subtask subtask = new Subtask(titleSubtask, descriptionSubtask, epicId, StatusOfTask.NEW);
-                taskManager.setCounterOfTasks();
+                //taskManager.setCounterOfTasks();
                 subtask.setId(taskManager.getCounterOfTasks());
                 taskManager.getAllSubtasks().add(subtask.getId(), subtask);
 

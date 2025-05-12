@@ -11,8 +11,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryTaskManagerTest {
-    private static TaskManager taskManager;
-     static int testId = 0;
+    private  TaskManager taskManager;
+      int testId = 0;
 
     @BeforeEach
     public void beforeEach() {

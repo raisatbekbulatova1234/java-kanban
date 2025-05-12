@@ -8,14 +8,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-    void setCounterOfTasks();
-
-   /* Map<Integer, Epic> getEpicHashMap();
-
-    Map<Integer, Task> getTaskHashMap();
-
-    Map<Integer, Subtask> getSubtaskHashMap();*/
-
     int getCounterOfTasks();
 
     List<Task> getAllTasks();
