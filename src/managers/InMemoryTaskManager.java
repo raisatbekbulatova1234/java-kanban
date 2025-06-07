@@ -69,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         if (taskHashMap.containsKey(id)) {
-            inMemoryHistoryManager.addTask(taskHashMap.get(id));
+            inMemoryHistoryManager.add(taskHashMap.get(id));
             return taskHashMap.get(id);
         }
         System.out.println(STR."Задачи по id - \{id} не обнаружено!");
@@ -79,7 +79,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getEpicById(int id) {
         if (epicHashMap.containsKey(id)) {
-            inMemoryHistoryManager.addTask(epicHashMap.get(id));
+            inMemoryHistoryManager.add(epicHashMap.get(id));
             return epicHashMap.get(id);
         }
         System.out.println(STR."Эпика по id - \{id} не обнаружено!");
@@ -89,7 +89,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getSubtaskById(int id) {
         if (subtaskHashMap.containsKey(id)) {
-            inMemoryHistoryManager.addTask(subtaskHashMap.get(id));
+            inMemoryHistoryManager.add(subtaskHashMap.get(id));
             return subtaskHashMap.get(id);
         }
         System.out.println(STR."Сабтаски по id - \{id} не обнаружено!");
