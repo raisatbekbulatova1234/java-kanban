@@ -82,4 +82,13 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.prev = null;
         }
     }
+    //я не понимаю где тут ошибка
+
+    /*  Error:  /home/runner/work/java-kanban/java-kanban/./src/managers/InMemoryHistoryManager.java:74:31: Class type name 'Task' must match pattern '(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)'. [ClassTypeParameterName]
+    Checkstyle ends with 1 errors.
+    Audit done.
+    Error: Process completed with exit code 1.
+
+    что надо исправить не вижу
+     */
 }
