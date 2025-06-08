@@ -40,8 +40,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             node.next.prev = node.prev;
 
         }
-        Node<Task> taskNode = mapTasks.get(node.data.getId());
-        mapTasks.remove(taskNode);
+        mapTasks.remove(node);
     }
 
     @Override
@@ -73,12 +72,12 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private static class Node<Task> {
-        public Task data;
+        public Task task;
         public Node<Task> next;
         public Node<Task> prev;
 
-        public Node(Node<Task> prev, Task data, Node<Task> next) {
-            this.data = data;
+        public Node(Node<Task> prev, Task task, Node<Task> next) {
+            this.task = task;
             this.next = null;
             this.prev = null;
         }
