@@ -82,7 +82,7 @@ public class InMemoryTaskManager implements TaskManager {
             inMemoryHistoryManager.add(epicHashMap.get(id));
             return epicHashMap.get(id);
         }
-        System.out.println(STR."Эпика по id - \{id} не обнаружено!");
+        System.out.println("Эпика по id - " + id + " не обнаружено!");
         return null;
     }
 
@@ -92,7 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
             inMemoryHistoryManager.add(subtaskHashMap.get(id));
             return subtaskHashMap.get(id);
         }
-        System.out.println(STR."Сабтаски по id - \{id} не обнаружено!");
+        System.out.println("Сабтаски по id - " + id + " не обнаружено!");
         return null;
     }
 
