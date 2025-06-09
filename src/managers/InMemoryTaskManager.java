@@ -72,7 +72,7 @@ public class InMemoryTaskManager implements TaskManager {
             inMemoryHistoryManager.add(taskHashMap.get(id));
             return taskHashMap.get(id);
         }
-        System.out.println(STR."Задачи по id - \{id} не обнаружено!");
+        System.out.println("Задачи по id - " + id + " не обнаружено!");
         return null;
     }
 
