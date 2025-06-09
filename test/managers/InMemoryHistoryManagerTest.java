@@ -80,7 +80,7 @@ class InMemoryHistoryManagerTest {
     @Test
     public void getHistoryShouldReturnListOf10Tasks() {
         for (int i = 0; i < 20; i++) {
-            Task task = new Task("Учеба", STR."Решить задачу №\{i}", StatusOfTask.NEW);
+            Task task = new Task("Учеба", "Решить задачу № " + i, StatusOfTask.NEW);
             task.setId(i);
             taskManager.createNewTask(task);
         }
