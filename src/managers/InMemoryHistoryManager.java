@@ -56,7 +56,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         removeNode(mapTasks.get(id));
     }
 
-
     @Override
     public List<Task> getHistory() {
         if (!mapTasks.isEmpty()) {
@@ -68,18 +67,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             System.out.println("Список просмотренных задач пуст!");
             return new ArrayList<>();
-        }
-    }
-
-    private static class Node<Task> {
-        public Task task;
-        public Node<Task> next;
-        public Node<Task> prev;
-
-        public Node(Node<Task> prev, Task task, Node<Task> next) {
-            this.task = task;
-            this.next = null;
-            this.prev = null;
         }
     }
 }
