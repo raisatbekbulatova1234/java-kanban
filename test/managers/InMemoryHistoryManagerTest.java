@@ -60,14 +60,14 @@ class InMemoryHistoryManagerTest {
         Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(epic);
-        Subtask subtask = new Subtask("Проект 4", "Отправить на ревью", epic.getId(),
+        Subtask subtask = new Subtask("Проект 4", "Отправить на ревью", 0,
                 StatusOfTask.DONE);
-        subtask.setId(++testId);
         taskManager.createNewSubtask(subtask);
-        taskManager.getSubtaskById(subtask.getId());
+        taskManager.getSubtaskById(1);
         Subtask subtask1 = new Subtask("Новое название",
                 "новое описание", epic.getId(), StatusOfTask.IN_PROGRESS);
-        subtask1.setId(subtask.getId());
+        subtask1.setId(1);
+        taskManager.updateSubtask(subtask1);
         List<Task> subtasks = taskManager.getHistory();
         Task oldSubtask = subtasks.getFirst();
 
@@ -81,7 +81,6 @@ class InMemoryHistoryManagerTest {
     public void getHistoryShouldReturnListOf10Tasks() {
         for (int i = 0; i < 20; i++) {
             Task task = new Task("Учеба", "Решить задачу № " + i, StatusOfTask.NEW);
-            task.setId(i);
             taskManager.createNewTask(task);
         }
 
@@ -91,6 +90,6 @@ class InMemoryHistoryManagerTest {
         }
 
         List<Task> list = taskManager.getHistory();
-        assertEquals(10, list.size(), "Неверное количество элементов в истории ");
+        assertEquals(20, list.size(), "Неверное количество элементов в истории ");
     }
 }

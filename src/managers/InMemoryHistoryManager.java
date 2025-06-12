@@ -14,10 +14,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         final Node<Task> oldTail = tail;
         final Node<Task> newNode = new Node(oldTail, element, null);
         tail = newNode;
-        if (oldTail == null)
+        if (oldTail == null) {
             head = newNode;
-        else
+        } else {
             oldTail.next = newNode;
+        }
+        mapTasks.put(element.getId(), newNode);
     }
 
     private void removeNode(Node<Task> node) {
@@ -60,8 +62,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> getHistory() {
         if (!mapTasks.isEmpty()) {
             List<Task> tasks = new ArrayList<>();
-            for (Map.Entry entry : mapTasks.entrySet()) {
-                tasks.add((Task) entry.getValue());
+            for (Map.Entry<Integer, Node<Task>> entry : mapTasks.entrySet()) {
+                tasks.add(entry.getValue().task);
             }
             return tasks;
         } else {

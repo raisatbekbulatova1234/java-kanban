@@ -101,6 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewTask(Task task) {
         task.setId(counterOfTasks);
         taskHashMap.put(task.getId(), task);
+        counterOfTasks++;
 
     }
 
@@ -108,6 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewEpic(Epic epic) {
         epic.setId(epic.getId());
         epicHashMap.put(epic.getId(), epic);
+        counterOfTasks++;
     }
 
     @Override
@@ -118,6 +120,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicHashMap.get(epicId);
         epic.getListSubtask().add(subtask.getId());
         updateEpicStatus(epicId);
+        counterOfTasks++;
     }
 
     @Override
