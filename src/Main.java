@@ -177,7 +177,7 @@ public class Main {
             case 2:
                 int counter = 1;
                 for (Subtask subtask : taskManager.getAllSubtasks()) {
-                    System.out.println(STR."\{counter}. \{subtask}");
+                    System.out.println(counter + ". " +  subtask);
                     counter++;
                 }
                 break;

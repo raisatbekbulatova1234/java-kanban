@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryTaskManagerTest {
     private  TaskManager taskManager;
-      int testId = 0;
+    int testId = 0;
 
     @BeforeEach
     public void beforeEach() {
@@ -43,7 +43,7 @@ public class InMemoryTaskManagerTest {
         subtask1.setId(testId++);
         final Subtask subtask2 = new Subtask("Проект 5", "Написать тесты", epic1.getId(),
                 StatusOfTask.NEW);
-       subtask2.setId(testId++);
+        subtask2.setId(testId++);
         final Subtask subtask3 = new Subtask("Почитать про тестирование", "глубже изучить логику тестирования", epic1.getId(),
                 StatusOfTask.IN_PROGRESS);
         subtask3.setId(testId++);
@@ -64,12 +64,12 @@ public class InMemoryTaskManagerTest {
         assertEquals(subtask1, savedSubtask1, "Подзадачи не равны!");
         assertEquals(subtask3, savedSubtask3, "Подзадачи не равны!");
 
-         List<Epic> epics = taskManager.getAllEpics();
+        List<Epic> epics = taskManager.getAllEpics();
         assertNotNull(epics, "Эпики не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество эпиков.");
         assertEquals(epic1, epics.getFirst(), "Эпики не равны.");
 
-         List<Subtask> subtasks = taskManager.getAllSubtasks();
+        List<Subtask> subtasks = taskManager.getAllSubtasks();
         System.out.println(subtasks.size());
         assertNotNull(subtasks, "Подзадачи не возвращаются.");
         assertEquals(savedSubtask1, subtasks.getFirst(), "Подзадачи не равны.");
@@ -104,14 +104,16 @@ public class InMemoryTaskManagerTest {
         final Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(epic);
-        final Subtask expectedSubtask = new Subtask("Проект 5", "Написать тесты", epic.getId(),
+        Epic addedEpic = taskManager.getAllEpics().get(0);
+        final Subtask expectedSubtask = new Subtask("Проект 5", "Написать тесты", addedEpic.getId(),
                 StatusOfTask.NEW);
         taskManager.createNewSubtask(expectedSubtask);
-        final Subtask newSubtask = new Subtask("Проект 5.2", "Написать тесты.2", epic.getId(),
+        final Subtask updatedSubtask  = new Subtask("Проект 5.2", "Написать тесты.2", addedEpic.getId(),
                 StatusOfTask.NEW);
-        newSubtask.setId(expectedSubtask.getId());
-        final Subtask actual = taskManager.getAllSubtasks().get(newSubtask.getId());
-        assertEquals(expectedSubtask, actual, "Вернулась подзадача с другим id");
+        updatedSubtask.setId(1);
+        taskManager.updateSubtask(updatedSubtask);
+        final Subtask actual = taskManager.getAllSubtasks().get(0);
+        assertEquals(1, actual.getId(), "Вернулась подзадача с другим id");
 
     }
 
