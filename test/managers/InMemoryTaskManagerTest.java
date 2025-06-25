@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewTaskAndFindById() {
+    void addNewTaskAndFindById() throws IOException {
         final Task task = new Task("Учеба", "Сдать 5-й проект", StatusOfTask.NEW);
         taskManager.createNewTask(task);
         final Task savedTask = taskManager.getTaskById(task.getId());
@@ -34,7 +35,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewEpicAndSubtasksAndFindById() {
+    void addNewEpicAndSubtasksAndFindById() throws IOException {
         final Epic epic1 = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         epic1.setId(testId);
@@ -76,7 +77,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void updateTaskShouldReturnTaskWithTheSameId() {
+    public void updateTaskShouldReturnTaskWithTheSameId() throws IOException {
         final Task expected = new Task("Учеба", "Сдать 5-й проект", StatusOfTask.NEW);
         taskManager.createNewTask(expected);
         final Task newTask = new Task("Учеба.2", "Сдать 5-й проект.2", StatusOfTask.DONE);
@@ -87,7 +88,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void updateEpicShouldReturnEpicWithTheSameId() {
+    public void updateEpicShouldReturnEpicWithTheSameId() throws IOException {
         final Epic expected = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(expected);
@@ -100,7 +101,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void updateSubtaskShouldReturnSubtaskWithTheSameId() {
+    public void updateSubtaskShouldReturnSubtaskWithTheSameId() throws IOException {
         final Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(epic);
@@ -118,7 +119,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void deleteTasksShouldReturnEmptyList() {
+    public void deleteTasksShouldReturnEmptyList() throws IOException {
         Task task = new Task("Учеба", "Сдать 5-й проект", StatusOfTask.NEW);
         taskManager.getAllTasks().add(task.getId(), task);
         Task task2 = new Task("Учеба", "Сдать 4-й проект", StatusOfTask.NEW);
@@ -129,7 +130,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void deleteEpicsShouldReturnEmptyList() {
+    public void deleteEpicsShouldReturnEmptyList() throws IOException {
         Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.getAllEpics().add(epic.getId(), epic);
@@ -139,7 +140,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void deleteSubtasksShouldReturnEmptyList() {
+    public void deleteSubtasksShouldReturnEmptyList() throws IOException {
         final Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(epic);
@@ -152,7 +153,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void TaskCreatedAndTaskAddedShouldHaveSameVariables() {
+    void TaskCreatedAndTaskAddedShouldHaveSameVariables() throws IOException {
         //тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
         Task expectedTask = new Task("Пойти в магазин", "Купить продукты", StatusOfTask.DONE);
         taskManager.createNewTask(expectedTask);
