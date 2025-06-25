@@ -1,10 +1,13 @@
 package tasks;
 
 import enums.StatusOfTask;
+import enums.TypeOfTasks;
 
 public class Subtask extends Task {
 
     private int epicId;
+    private TypeOfTasks typeOfTasks = TypeOfTasks.SUBTASK;
+
 
     public Subtask(String title, String description, int epicId, StatusOfTask status) {
         super(title, description, status);
@@ -33,5 +36,13 @@ public class Subtask extends Task {
                 ", описание = " + super.getDescription() +
                 ", статус подзадачи = " + super.getStatusOfTask() +
                 '}';
+    }
+
+    public TypeOfTasks getTypeOfTasks() {
+        return typeOfTasks;
+    }
+
+    private void setTypeOfTasks(TypeOfTasks typeOfTasks) {
+        this.typeOfTasks = typeOfTasks;
     }
 }

@@ -1,18 +1,21 @@
 import enums.StatusOfTask;
 import managers.InMemoryTaskManager;
 import managers.TaskManager;
-import tasks.*;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     static TaskManager taskManager = new InMemoryTaskManager();
+
     static Scanner scanner = new Scanner(System.in);
 
-    private static void taskApp(int commandTask) {
+    private static void taskApp(int commandTask) throws IOException {
         switch (commandTask) {
             case 0:
                 return;
@@ -61,7 +64,7 @@ public class Main {
         }
     }
 
-    private static void epicApp(int commandEpic) {
+    private static void epicApp(int commandEpic) throws IOException {
         switch (commandEpic) {
             case 0:
                 return;
@@ -156,7 +159,7 @@ public class Main {
         }
     }
 
-    private static void subtaskApp(int commandSubtask) {
+    private static void subtaskApp(int commandSubtask) throws IOException {
         switch (commandSubtask) {
             case 0:
                 return;
@@ -177,7 +180,7 @@ public class Main {
             case 2:
                 int counter = 1;
                 for (Subtask subtask : taskManager.getAllSubtasks()) {
-                    System.out.println(counter + ". " +  subtask);
+                    System.out.println(counter + ". " + subtask);
                     counter++;
                 }
                 break;
@@ -218,7 +221,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
 

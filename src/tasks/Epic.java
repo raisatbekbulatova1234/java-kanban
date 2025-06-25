@@ -1,12 +1,15 @@
 package tasks;
 
 import enums.StatusOfTask;
+import enums.TypeOfTasks;
 
 import java.util.List;
 
 public class Epic extends Task {
 
     private List<Integer> listSubtask;
+    private TypeOfTasks typeOfTasks = TypeOfTasks.TASK;
+
 
     public Epic(String title, String description, List<Integer> subtaskId, StatusOfTask status) {
         super(title, description, status);
@@ -26,5 +29,14 @@ public class Epic extends Task {
                 "количество подзадач = " + listSubtask.size() +
                 ", статус эпика = " + super.getStatusOfTask() +
                 '}';
+    }
+
+    @Override
+    public TypeOfTasks getTypeOfTasks() {
+        return typeOfTasks;
+    }
+
+    private void setTypeOfTasks(TypeOfTasks typeOfTasks) {
+        this.typeOfTasks = typeOfTasks;
     }
 }

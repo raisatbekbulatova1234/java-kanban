@@ -1,6 +1,7 @@
 package tasks;
 
 import enums.StatusOfTask;
+import enums.TypeOfTasks;
 
 import java.util.Objects;
 
@@ -10,6 +11,7 @@ public class Task {
     private String description;
     private int id;
     private StatusOfTask statusOfTask;
+    private TypeOfTasks typeOfTasks = TypeOfTasks.TASK;
 
     public Task(String title, String description, StatusOfTask status) {
         this.title = title;
@@ -61,5 +63,13 @@ public class Task {
                 ", id = " + id +
                 ", статус задачи = " + statusOfTask +
                 '}';
+    }
+
+    public TypeOfTasks getTypeOfTasks() {
+        return typeOfTasks;
+    }
+
+    private void setTypeOfTasks(TypeOfTasks typeOfTasks) {
+        this.typeOfTasks = typeOfTasks;
     }
 }

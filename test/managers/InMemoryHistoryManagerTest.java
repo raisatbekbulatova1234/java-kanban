@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryHistoryManagerTest {
 
     private TaskManager taskManager;
-    int testId = 0;
 
     @BeforeEach
     public void beforeEach() {
@@ -23,7 +22,6 @@ class InMemoryHistoryManagerTest {
     @Test
     public void getHistoryShouldReturnOldTaskAfterUpdate() {
         Task task = new Task("Учеба", "Сдать 5-й проект.", StatusOfTask.DONE);
-        //task.setId(++testId);
         taskManager.createNewTask(task);
         taskManager.getTaskById(task.getId());
         Task task1 = new Task("Учеба", "Добавить тесты к проекту", StatusOfTask.IN_PROGRESS);
