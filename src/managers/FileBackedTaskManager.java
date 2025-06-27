@@ -7,33 +7,24 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    private static String fileName;
+
     private File file;
+
+    private Map<Integer, Task> taskHashMap = new HashMap<>();
+    private Map<Integer, Epic> epicHashMap = new HashMap<>();
+    private Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
 
     public FileBackedTaskManager(File file) {
         this.file = file;
-        this.fileName = file.getName();
     }
 
-
-    public File getFile() {
-        return file;
-    }
-
-
-    public String getFileName() {
-        return fileName;
-    }
 
     private String taskToString(Task task) {
         if (task instanceof Subtask) {
@@ -47,7 +38,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    private Task taskFromString(String value) {
+    private static Task taskFromString(String value) {
 
         String[] str = value.split(",");
         String status = str[4].toUpperCase();
@@ -63,25 +54,37 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             return new Task(str[2], str[3], statusOfTask);
         }
         if (type.equals(TypeOfTasks.EPIC)) {
-            return new Epic(str[2], str[3], new ArrayList<>(), statusOfTask);
+            return new Epic(str[2], str[3], statusOfTask);
         }
         if (type.equals(TypeOfTasks.SUBTASK)) {
-            return new Subtask(str[2], str[3], 0, statusOfTask);
+            return new Subtask(str[2], str[3], statusOfTask);
         } else
             return null;
     }
 
 
-    static FileBackedTaskManager loadFromFile(File file) throws IOException {
+    FileBackedTaskManager loadFromFile(File file) throws IOException {
 
-        String path = Files.readString(file.toPath());
-        File newFile = new File(path);
-        return new FileBackedTaskManager(newFile);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file.getName()))) {
+            reader.readLine();
+            while (reader.ready()) {
+                String line = reader.readLine();
+                if (taskFromString(line) instanceof Task task) {
+                    taskHashMap.put(task.getId(), task);
+                } else if (taskFromString(line) instanceof Epic epic) {
+                    epicHashMap.put(epic.getId(), epic);
+                } else if (taskFromString(line) instanceof Subtask subtask) {
+                    subtaskHashMap.put(subtask.getId(), subtask);
+                }
+            }
+
+        }
+        return new FileBackedTaskManager(file);
     }
 
 
     public void save() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, StandardCharsets.UTF_8, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.getName(), StandardCharsets.UTF_8, true))) {
             if (file.length() == 0) {
                 String s = "id,type,name,status,description,epic";
                 writer.write(s + "\n");
