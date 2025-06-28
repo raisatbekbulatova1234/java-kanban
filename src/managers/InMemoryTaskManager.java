@@ -69,30 +69,30 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         if (taskHashMap.containsKey(id)) {
-            inMemoryHistoryManager.addTask(taskHashMap.get(id));
+            inMemoryHistoryManager.add(taskHashMap.get(id));
             return taskHashMap.get(id);
         }
-        System.out.println(STR."Задачи по id - \{id} не обнаружено!");
+        System.out.println("Задачи по id - " + id + " не обнаружено!");
         return null;
     }
 
     @Override
     public Task getEpicById(int id) {
         if (epicHashMap.containsKey(id)) {
-            inMemoryHistoryManager.addTask(epicHashMap.get(id));
+            inMemoryHistoryManager.add(epicHashMap.get(id));
             return epicHashMap.get(id);
         }
-        System.out.println(STR."Эпика по id - \{id} не обнаружено!");
+        System.out.println("Эпика по id - " + id + " не обнаружено!");
         return null;
     }
 
     @Override
     public Task getSubtaskById(int id) {
         if (subtaskHashMap.containsKey(id)) {
-            inMemoryHistoryManager.addTask(subtaskHashMap.get(id));
+            inMemoryHistoryManager.add(subtaskHashMap.get(id));
             return subtaskHashMap.get(id);
         }
-        System.out.println(STR."Сабтаски по id - \{id} не обнаружено!");
+        System.out.println("Сабтаски по id - " + id + " не обнаружено!");
         return null;
     }
 
@@ -101,6 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewTask(Task task) {
         task.setId(counterOfTasks);
         taskHashMap.put(task.getId(), task);
+        counterOfTasks++;
 
     }
 
@@ -108,6 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewEpic(Epic epic) {
         epic.setId(epic.getId());
         epicHashMap.put(epic.getId(), epic);
+        counterOfTasks++;
     }
 
     @Override
@@ -118,6 +120,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicHashMap.get(epicId);
         epic.getListSubtask().add(subtask.getId());
         updateEpicStatus(epicId);
+        counterOfTasks++;
     }
 
     @Override

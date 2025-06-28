@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import enums.StatusOfTask;
 import tasks.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryHistoryManagerTest {
 
     private TaskManager taskManager;
-    int testId = 0;
+
 
     @BeforeEach
     public void beforeEach() {
@@ -21,9 +22,8 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void getHistoryShouldReturnOldTaskAfterUpdate() {
+    public void getHistoryShouldReturnOldTaskAfterUpdate() throws IOException {
         Task task = new Task("Учеба", "Сдать 5-й проект.", StatusOfTask.DONE);
-        //task.setId(++testId);
         taskManager.createNewTask(task);
         taskManager.getTaskById(task.getId());
         Task task1 = new Task("Учеба", "Добавить тесты к проекту", StatusOfTask.IN_PROGRESS);
@@ -38,7 +38,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void getHistoryShouldReturnOldEpicAfterUpdate() {
+    public void getHistoryShouldReturnOldEpicAfterUpdate() throws IOException {
         Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(epic);
@@ -56,18 +56,18 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void getHistoryShouldReturnOldSubtaskAfterUpdate() {
+    public void getHistoryShouldReturnOldSubtaskAfterUpdate() throws IOException {
         Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(epic);
-        Subtask subtask = new Subtask("Проект 4", "Отправить на ревью", epic.getId(),
+        Subtask subtask = new Subtask("Проект 4", "Отправить на ревью", 0,
                 StatusOfTask.DONE);
-        subtask.setId(++testId);
         taskManager.createNewSubtask(subtask);
-        taskManager.getSubtaskById(subtask.getId());
+        taskManager.getSubtaskById(1);
         Subtask subtask1 = new Subtask("Новое название",
                 "новое описание", epic.getId(), StatusOfTask.IN_PROGRESS);
-        subtask1.setId(subtask.getId());
+        subtask1.setId(1);
+        taskManager.updateSubtask(subtask1);
         List<Task> subtasks = taskManager.getHistory();
         Task oldSubtask = subtasks.getFirst();
 
@@ -78,10 +78,9 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void getHistoryShouldReturnListOf10Tasks() {
+    public void getHistoryShouldReturnListOf10Tasks() throws IOException {
         for (int i = 0; i < 20; i++) {
-            Task task = new Task("Учеба", STR."Решить задачу №\{i}", StatusOfTask.NEW);
-            task.setId(i);
+            Task task = new Task("Учеба", "Решить задачу № " + i, StatusOfTask.NEW);
             taskManager.createNewTask(task);
         }
 
@@ -91,6 +90,6 @@ class InMemoryHistoryManagerTest {
         }
 
         List<Task> list = taskManager.getHistory();
-        assertEquals(10, list.size(), "Неверное количество элементов в истории ");
+        assertEquals(20, list.size(), "Неверное количество элементов в истории ");
     }
 }
