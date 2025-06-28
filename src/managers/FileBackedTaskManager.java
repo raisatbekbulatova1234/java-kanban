@@ -16,6 +16,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     private File file;
+    int counterOfTasks = 0;
 
     private Map<Integer, Task> taskHashMap = new HashMap<>();
     private Map<Integer, Epic> epicHashMap = new HashMap<>();
@@ -25,6 +26,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
+    @Override
+    public int getCounterOfTasks() {
+        return counterOfTasks;
+    }
 
     private String taskToString(Task task) {
         if (task instanceof Subtask) {
@@ -69,14 +74,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             reader.readLine();
             while (reader.ready()) {
                 String line = reader.readLine();
-                if (taskFromString(line) instanceof Task task) {
+                TypeOfTasks type = taskFromString(line).getTypeOfTasks();
+                if (type == TypeOfTasks.TASK) {
+                    Task task = new Task(taskFromString(line).getTitle(), taskFromString(line).getDescription());
                     taskHashMap.put(task.getId(), task);
-                } else if (taskFromString(line) instanceof Epic epic) {
+                } else if (type == TypeOfTasks.EPIC) {
+                    Epic epic = new Epic(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask());
                     epicHashMap.put(epic.getId(), epic);
-                } else if (taskFromString(line) instanceof Subtask subtask) {
+                } else if (type == TypeOfTasks.SUBTASK) {
+                    Subtask subtask = new Subtask(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask());
                     subtaskHashMap.put(subtask.getId(), subtask);
                 }
+
             }
+            counterOfTasks = counterOfTasks + taskHashMap.size() + epicHashMap.size() + subtaskHashMap.size();
 
         }
         return new FileBackedTaskManager(file);

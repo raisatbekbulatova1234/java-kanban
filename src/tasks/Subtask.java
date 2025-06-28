@@ -6,7 +6,6 @@ import enums.TypeOfTasks;
 public class Subtask extends Task {
 
     private int epicId;
-    private TypeOfTasks typeOfTasks = TypeOfTasks.SUBTASK;
 
 
     public Subtask(String title, String description, int epicId, StatusOfTask status) {
@@ -43,11 +42,10 @@ public class Subtask extends Task {
                 '}';
     }
 
+    @Override
     public TypeOfTasks getTypeOfTasks() {
-        return typeOfTasks;
+        return TypeOfTasks.SUBTASK;
     }
 
-    private void setTypeOfTasks(TypeOfTasks typeOfTasks) {
-        this.typeOfTasks = typeOfTasks;
-    }
+
 }

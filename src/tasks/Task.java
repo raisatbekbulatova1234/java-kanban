@@ -11,7 +11,6 @@ public class Task {
     private String description;
     private int id;
     private StatusOfTask statusOfTask;
-    private TypeOfTasks typeOfTasks = TypeOfTasks.TASK;
 
     public Task(String title, String description, StatusOfTask status) {
         this.title = title;
@@ -73,10 +72,6 @@ public class Task {
     }
 
     public TypeOfTasks getTypeOfTasks() {
-        return typeOfTasks;
-    }
-
-    private void setTypeOfTasks(TypeOfTasks typeOfTasks) {
-        this.typeOfTasks = typeOfTasks;
+        return TypeOfTasks.TASK;
     }
 }

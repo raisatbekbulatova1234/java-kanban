@@ -8,8 +8,6 @@ import java.util.List;
 public class Epic extends Task {
 
     private List<Integer> listSubtask;
-    private TypeOfTasks typeOfTasks = TypeOfTasks.TASK;
-
 
     public Epic(String title, String description, List<Integer> subtaskId, StatusOfTask status) {
         super(title, description, status);
@@ -38,10 +36,7 @@ public class Epic extends Task {
 
     @Override
     public TypeOfTasks getTypeOfTasks() {
-        return typeOfTasks;
+        return TypeOfTasks.EPIC;
     }
 
-    private void setTypeOfTasks(TypeOfTasks typeOfTasks) {
-        this.typeOfTasks = typeOfTasks;
-    }
 }
