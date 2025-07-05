@@ -33,11 +33,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private String taskToString(Task task) {
         if (task instanceof Subtask) {
-            return String.format("%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
-                    task.getDescription(), task.getStatusOfTask(), ((Subtask) task).getEpicId());
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
+                    task.getDescription(), task.getStatusOfTask(), ((Subtask) task).getEpicId(), task.getStartTime(),task.getDuration(), task.getEndTime());
         } else {
-            return String.format("%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
-                    task.getDescription(), task.getStatusOfTask());
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
+                    task.getDescription(), task.getStatusOfTask(), task.getStartTime(),task.getDuration(), task.getEndTime());
 
         }
     }
@@ -76,13 +76,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String line = reader.readLine();
                 TypeOfTasks type = taskFromString(line).getTypeOfTasks();
                 if (type == TypeOfTasks.TASK) {
-                    Task task = new Task(taskFromString(line).getTitle(), taskFromString(line).getDescription());
+                    Task task = new Task(taskFromString(line).getTitle(), taskFromString(line).getDescription(),taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
                     taskHashMap.put(task.getId(), task);
                 } else if (type == TypeOfTasks.EPIC) {
-                    Epic epic = new Epic(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask());
+                    Epic epic = new Epic(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
                     epicHashMap.put(epic.getId(), epic);
                 } else if (type == TypeOfTasks.SUBTASK) {
-                    Subtask subtask = new Subtask(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask());
+                    Subtask subtask = new Subtask(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
                     subtaskHashMap.put(subtask.getId(), subtask);
                 }
 
@@ -97,7 +97,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.getName(), StandardCharsets.UTF_8, true))) {
             if (file.length() == 0) {
-                String s = "id,type,name,status,description,epic";
+                String s = "id,type,name,status,description,epic, startTime, duration, endTime";
                 writer.write(s + "\n");
             }
             for (Task task : getAllTasks()) {

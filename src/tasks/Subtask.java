@@ -3,6 +3,9 @@ package tasks;
 import enums.StatusOfTask;
 import enums.TypeOfTasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
 
     private int epicId;
@@ -16,6 +19,10 @@ public class Subtask extends Task {
 
     public Subtask(String title, String description, StatusOfTask status) {
         super(title, description, status);
+    }
+
+    public Subtask(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
+        super(title, description, statusOfTask, startTime, duration, endTime);
     }
 
     @Override

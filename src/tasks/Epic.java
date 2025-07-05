@@ -3,11 +3,14 @@ package tasks;
 import enums.StatusOfTask;
 import enums.TypeOfTasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Epic extends Task {
 
     private List<Integer> listSubtask;
+
 
     public Epic(String title, String description, List<Integer> subtaskId, StatusOfTask status) {
         super(title, description, status);
@@ -17,6 +20,10 @@ public class Epic extends Task {
 
     public Epic(String title, String description, StatusOfTask status) {
         super(title, description, status);
+    }
+
+    public Epic(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
+        super(title, description, statusOfTask, startTime, duration, endTime);
     }
 
     public List<Integer> getListSubtask() {

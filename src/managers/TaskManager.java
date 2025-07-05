@@ -5,6 +5,8 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskManager {
@@ -50,4 +52,10 @@ public interface TaskManager {
     List<Subtask> getAllSubtaskFromEpic(int epicId) throws IOException;
 
     List<Task> getHistory();
+
+    Duration getDuration(Epic epic);
+
+    LocalDateTime getStartTime(Epic epic);
+
+    LocalDateTime getEndTime(Epic epic);
 }

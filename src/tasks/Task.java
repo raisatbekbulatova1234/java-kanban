@@ -3,14 +3,44 @@ package tasks;
 import enums.StatusOfTask;
 import enums.TypeOfTasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Comparable<Task> {
 
     private String title;
     private String description;
     private int id;
     private StatusOfTask statusOfTask;
+    private LocalDateTime endTime;
+
+    private Duration duration;
+    private LocalDateTime startTime;
+
+    public LocalDateTime getEndTime() {
+        return endTime = startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 
     public Task(String title, String description, StatusOfTask status) {
         this.title = title;
@@ -23,6 +53,15 @@ public class Task {
         this.title = title;
         this.description = description;
 
+    }
+
+    public Task(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
+        this.title = title;
+        this.description = description;
+        this.endTime = endTime;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.statusOfTask = statusOfTask;
     }
 
     public void setId(int id) {
@@ -49,6 +88,7 @@ public class Task {
         this.statusOfTask = statusOfTask;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -73,5 +113,11 @@ public class Task {
 
     public TypeOfTasks getTypeOfTasks() {
         return TypeOfTasks.TASK;
+    }
+
+
+    @Override
+    public int compareTo(Task other) {
+        return this.startTime.compareTo(other.startTime);
     }
 }
