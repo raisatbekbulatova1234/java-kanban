@@ -30,6 +30,10 @@ public class Epic extends Task {
         return listSubtask;
     }
 
+    public void setListSubtask(List<Integer> listSubtask) {
+        this.listSubtask = listSubtask;
+    }
+
     @Override
     public String toString() {
         return "Эпик { " +

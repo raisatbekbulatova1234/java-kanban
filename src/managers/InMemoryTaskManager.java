@@ -286,19 +286,21 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public List<Task> getPrioritizedTasks() {
+        // Используем TreeSet для автоматической сортировки при вставке (O(log n) на вставку)
+        if (prioritizedTaskTreeSet == null) {
+            prioritizedTaskTreeSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+        } else {
+            prioritizedTaskTreeSet.clear();
+        }
 
-        List<Subtask> subtasks = getAllSubtasks();
-        List<Task> tasks = getAllTasks();
-        tasks.addAll(subtasks);
-        tasks.removeIf(task -> task.getStartTime() == null);
+        // Добавляем все задачи (O(n log n) общее, но лучше чем сортировка отдельно)
+        prioritizedTaskTreeSet.addAll(getAllTasks());
+        prioritizedTaskTreeSet.addAll(getAllSubtasks());
 
-        List<Task> prioritizedTasksList = tasks.stream()
-                .sorted(Comparator.comparing(Task::compareTo))// Сортируем по приоритету
-                .collect(Collectors.toList());
+        // Удаляем задачи без времени старта (O(n))
+        prioritizedTaskTreeSet.removeIf(task -> task.getStartTime() == null);
 
-        prioritizedTaskTreeSet = new TreeSet<>(prioritizedTasksList);
-        return prioritizedTasksList;
-//    нужна подсказка, не пойму что не так делаю тут
+        return new ArrayList<>(prioritizedTaskTreeSet);
     }
 
     public boolean isOverlapping(Task task1, Task task2) {

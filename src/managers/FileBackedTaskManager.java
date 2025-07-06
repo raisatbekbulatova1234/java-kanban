@@ -9,8 +9,11 @@ import tasks.Task;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -34,10 +37,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private String taskToString(Task task) {
         if (task instanceof Subtask) {
             return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
-                    task.getDescription(), task.getStatusOfTask(), ((Subtask) task).getEpicId(), task.getStartTime(),task.getDuration(), task.getEndTime());
+                    task.getDescription(), task.getStatusOfTask(), ((Subtask) task).getEpicId(), task.getStartTime(), task.getDuration(), task.getEndTime());
         } else {
             return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
-                    task.getDescription(), task.getStatusOfTask(), task.getStartTime(),task.getDuration(), task.getEndTime());
+                    task.getDescription(), task.getStatusOfTask(), task.getStartTime(), task.getDuration(), task.getEndTime());
 
         }
     }
@@ -75,15 +78,30 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             while (reader.ready()) {
                 String line = reader.readLine();
                 TypeOfTasks type = taskFromString(line).getTypeOfTasks();
-                if (type == TypeOfTasks.TASK) {
-                    Task task = new Task(taskFromString(line).getTitle(), taskFromString(line).getDescription(),taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
-                    taskHashMap.put(task.getId(), task);
-                } else if (type == TypeOfTasks.EPIC) {
-                    Epic epic = new Epic(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
-                    epicHashMap.put(epic.getId(), epic);
-                } else if (type == TypeOfTasks.SUBTASK) {
-                    Subtask subtask = new Subtask(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
-                    subtaskHashMap.put(subtask.getId(), subtask);
+                switch (type) {
+                    case TypeOfTasks.TASK:
+                        Task task = new Task(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
+                        taskHashMap.put(task.getId(), task);
+                        break;
+                    case TypeOfTasks.EPIC:
+                        Epic epic = new Epic(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
+                        List<Integer> integerList = new ArrayList<>();
+                        subtaskHashMap.values().stream()
+                                .filter(subtask -> subtask.getEpicId() == epic.getId())
+                                .peek(subtask -> integerList.add(subtask.getId()))
+                                .toList();
+                        epic.setListSubtask(integerList);
+                        epicHashMap.put(epic.getId(), epic);
+
+                        break;
+                    case TypeOfTasks.SUBTASK:
+                        Subtask subtask = new Subtask(taskFromString(line).getTitle(), taskFromString(line).getDescription(), taskFromString(line).getStatusOfTask(), taskFromString(line).getStartTime(), taskFromString(line).getDuration(), taskFromString(line).getEndTime());
+                        subtaskHashMap.put(subtask.getId(), subtask);
+                        epicHashMap.values().stream()
+                                .filter(epic1 -> epic1.getListSubtask().contains(subtask.getId()))
+                                .peek(epic1 -> subtask.setEpicId(epic1.getId()))
+                                .toList();
+                        break;
                 }
 
             }
