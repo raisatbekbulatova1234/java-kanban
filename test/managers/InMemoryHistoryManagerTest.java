@@ -6,28 +6,31 @@ import enums.StatusOfTask;
 import tasks.*;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryHistoryManagerTest {
+class InMemoryHistoryManagerTest extends TaskManagerTest<TaskManager> {
 
     private TaskManager taskManager;
-
-
-    @BeforeEach
-    public void beforeEach() {
-        taskManager = Managers.getDefault();
+    @Override
+    protected TaskManager createManager() {
+        return Managers.getDefault();
     }
-
     @Test
     public void getHistoryShouldReturnOldTaskAfterUpdate() throws IOException {
         Task task = new Task("Учеба", "Сдать 5-й проект.", StatusOfTask.DONE);
+        task.setStartTime(LocalDateTime.now());
+        task.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewTask(task);
         taskManager.getTaskById(task.getId());
         Task task1 = new Task("Учеба", "Добавить тесты к проекту", StatusOfTask.IN_PROGRESS);
         task1.setId(task.getId());
+        task1.setStartTime(task.getStartTime());
+        task1.setDuration(task.getDuration());
         taskManager.updateTask(task1);
         List<Task> tasks = taskManager.getHistory();
         Task oldTask = tasks.getFirst();
@@ -41,6 +44,8 @@ class InMemoryHistoryManagerTest {
     public void getHistoryShouldReturnOldEpicAfterUpdate() throws IOException {
         Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
+        epic.setStartTime(LocalDateTime.now());
+        epic.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewEpic(epic);
         taskManager.getEpicById(epic.getId());
         Epic epic1 = new Epic("Новый эпик", "Новое описание", new ArrayList<>(),
@@ -59,14 +64,20 @@ class InMemoryHistoryManagerTest {
     public void getHistoryShouldReturnOldSubtaskAfterUpdate() throws IOException {
         Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
+        epic.setStartTime(LocalDateTime.now());
+        epic.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewEpic(epic);
         Subtask subtask = new Subtask("Проект 4", "Отправить на ревью", 0,
                 StatusOfTask.DONE);
+        subtask.setStartTime(LocalDateTime.now());
+        subtask.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewSubtask(subtask);
         taskManager.getSubtaskById(1);
         Subtask subtask1 = new Subtask("Новое название",
                 "новое описание", epic.getId(), StatusOfTask.IN_PROGRESS);
         subtask1.setId(1);
+        subtask1.setStartTime(subtask.getStartTime());
+        subtask1.setDuration(subtask.getDuration());
         taskManager.updateSubtask(subtask1);
         List<Task> subtasks = taskManager.getHistory();
         Task oldSubtask = subtasks.getFirst();
@@ -81,7 +92,10 @@ class InMemoryHistoryManagerTest {
     public void getHistoryShouldReturnListOf10Tasks() throws IOException {
         for (int i = 0; i < 20; i++) {
             Task task = new Task("Учеба", "Решить задачу № " + i, StatusOfTask.NEW);
+            task.setStartTime(LocalDateTime.now().plusMonths(i));
+            task.setDuration(Duration.ofMinutes(10000));
             taskManager.createNewTask(task);
+            //taskManager.getTaskById(task.getId());
         }
 
         List<Task> tasks = taskManager.getAllTasks();
@@ -92,4 +106,6 @@ class InMemoryHistoryManagerTest {
         List<Task> list = taskManager.getHistory();
         assertEquals(20, list.size(), "Неверное количество элементов в истории ");
     }
+
+
 }
