@@ -17,7 +17,7 @@ public class Subtask extends Task {
     }
 
 
-    public Subtask(String title, String description, StatusOfTask status) {
+    public Subtask(String title, String description, StatusOfTask status, LocalDateTime startTime, Duration duration) {
         super(title, description, status);
     }
 

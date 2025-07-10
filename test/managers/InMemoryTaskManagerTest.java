@@ -14,13 +14,32 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryTaskManagerTest {
-    private  TaskManager taskManager;
+    private TaskManager taskManager;
     int testId = 0;
 
     @BeforeEach
     public void beforeEach() {
         taskManager = Managers.getDefault();
     }
+
+
+    @Test
+    public void testGetCounterOfTask() throws IOException {
+        Task task = new Task("Учеба", "Сдать 5-й проект.", StatusOfTask.DONE);
+        task.setStartTime(LocalDateTime.now());
+        task.setDuration(Duration.ofMinutes(10000));
+        taskManager.createNewTask(task);
+        Task task1 = new Task("Учеба", "Добавить тесты к проекту", StatusOfTask.IN_PROGRESS);
+        task1.setStartTime(LocalDateTime.now().plusDays(666));
+        task1.setDuration(Duration.ofMinutes(10000));
+        taskManager.createNewTask(task1);
+
+        int expected = 2;
+        int count = taskManager.getCounterOfTasks();
+
+        assertEquals(expected, count);
+    }
+
 
     @Test
     void addNewTaskAndFindById() throws IOException {
@@ -133,7 +152,7 @@ public class InMemoryTaskManagerTest {
         expectedSubtask.setStartTime(LocalDateTime.now());
         expectedSubtask.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewSubtask(expectedSubtask);
-        final Subtask updatedSubtask  = new Subtask("Проект 5.2", "Написать тесты.2", addedEpic.getId(),
+        final Subtask updatedSubtask = new Subtask("Проект 5.2", "Написать тесты.2", addedEpic.getId(),
                 StatusOfTask.NEW);
         updatedSubtask.setStartTime(LocalDateTime.now());
         updatedSubtask.setDuration(Duration.ofMinutes(10000));

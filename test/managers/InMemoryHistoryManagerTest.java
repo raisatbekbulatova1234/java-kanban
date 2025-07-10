@@ -13,13 +13,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryHistoryManagerTest extends TaskManagerTest<TaskManager> {
+class InMemoryHistoryManagerTest {
 
     private TaskManager taskManager;
-    @Override
-    protected TaskManager createManager() {
-        return Managers.getDefault();
-    }
+
     @Test
     public void getHistoryShouldReturnOldTaskAfterUpdate() throws IOException {
         Task task = new Task("Учеба", "Сдать 5-й проект.", StatusOfTask.DONE);

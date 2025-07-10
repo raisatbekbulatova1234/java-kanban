@@ -22,8 +22,8 @@ public class Epic extends Task {
         super(title, description, status);
     }
 
-    public Epic(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
-        super(title, description, statusOfTask, startTime, duration, endTime);
+    public Epic(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration) {
+        super(title, description, statusOfTask, startTime, duration);
     }
 
     public List<Integer> getListSubtask() {
@@ -39,7 +39,7 @@ public class Epic extends Task {
         return "Эпик { " +
                 "название = " + super.getTitle() +
                 ", " + "описание = " + super.getDescription() +
-                ", " + "id = " + super.getId() + ", " + '\n' +
+                ", " + "id = " + super.getId() + ", " +
                 "количество подзадач = " + listSubtask.size() +
                 ", статус эпика = " + super.getStatusOfTask() +
                 '}';
