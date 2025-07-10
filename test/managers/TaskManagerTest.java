@@ -7,117 +7,336 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
 
+
     protected T manager;
-    
+
     protected Task createTask() {
-        return new Task("Title", "Description", StatusOfTask.NEW, LocalDateTime.now(), Duration.ofMinutes(10000));
+        return new Task("Учеба", "Решить задачу",
+                StatusOfTask.NEW, LocalDateTime.now().plusMonths(5), Duration.ofMinutes(10000));
     }
+
     protected Epic createEpic() {
-
-        return new Epic("Title", "Description", StatusOfTask.NEW, LocalDateTime.now().plusMonths(5), Duration.ofMinutes(20000));
-    }
-    protected Subtask createSubtask(Epic epic) {
-        return new Subtask("Title", "Description", StatusOfTask.NEW, LocalDateTime.now().plusDays(13), Duration.ofMinutes(30000));
+        return new Epic("Программирование", "Пройти спринт 5",
+                StatusOfTask.NEW, LocalDateTime.now().plusMonths(2), Duration.ofMinutes(20000));
     }
 
-    @Test
-    void getCounterOfTasks() {
+    protected Subtask createSubtask() {
+        return new Subtask("Почитать про тестирование", "глубже изучить логику тестирования",
+                StatusOfTask.NEW, LocalDateTime.now().plusMonths(14), Duration.ofMinutes(20000));
     }
 
     @Test
-    void getAllTasks() {
+    public void shouldCreateTask() throws IOException {
+        Task task = createTask();
+        manager.createNewTask(task);
+        List<Task> tasks = manager.getAllTasks();
+        assertNotNull(task.getStatusOfTask());
+        assertEquals(StatusOfTask.NEW, task.getStatusOfTask());
+        assertEquals(List.of(task), tasks);
     }
 
     @Test
-    void getAllEpics() {
+    public void shouldCreateEpic() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        List<Epic> epics = manager.getAllEpics();
+        assertNotNull(epic.getStatusOfTask());
+        assertEquals(StatusOfTask.NEW, epic.getStatusOfTask());
+        assertEquals(Collections.EMPTY_LIST, epic.getListSubtask());
+        assertEquals(List.of(epic), epics);
     }
 
     @Test
-    void getAllSubtasks() {
+    public void shouldCreateSubtask() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        List<Subtask> subtasks = manager.getAllSubtasks();
+        assertNotNull(subtask.getStatusOfTask());
+        assertEquals(epic.getId(), subtask.getEpicId());
+        assertEquals(StatusOfTask.NEW, subtask.getStatusOfTask());
+        assertEquals(List.of(subtask), subtasks);
+        assertEquals(List.of(subtask.getId()), epic.getListSubtask());
     }
 
     @Test
-    void deleteAllTasks() {
+    void shouldReturnNullWhenCreateTaskNull() throws IOException {
+        Task task = null;
+        manager.createNewTask(task);
+        assertNull(task);
+    }
+
+
+    @Test
+    public void shouldUpdateTaskStatusToInProgress() throws IOException {
+        Task task = createTask();
+        manager.createNewTask(task);
+        task.setStatusOfTask(StatusOfTask.IN_PROGRESS);
+        manager.updateTask(task);
+        assertEquals(StatusOfTask.IN_PROGRESS, manager.getTaskById(task.getId()).getStatusOfTask());
     }
 
     @Test
-    void deleteAllEpics() {
+    public void shouldUpdateEpicStatusToInProgress() throws IOException {
+        Epic epic = createEpic();
+        manager.createNewEpic(epic);
+        epic.setStatusOfTask(StatusOfTask.IN_PROGRESS);
+        assertEquals(StatusOfTask.IN_PROGRESS, manager.getEpicById(epic.getId()).getStatusOfTask());
     }
 
     @Test
-    void deleteAllSubtasks() {
+    public void shouldUpdateSubtaskStatusToInProgress() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        subtask.setStatusOfTask(StatusOfTask.IN_PROGRESS);
+        manager.updateSubtask(subtask);
+
+        assertEquals(StatusOfTask.IN_PROGRESS, manager.getSubtaskById(subtask.getId()).getStatusOfTask());
+        assertEquals(StatusOfTask.IN_PROGRESS, manager.getEpicById(epic.getId()).getStatusOfTask());
     }
 
     @Test
-    void getTaskById() {
+    public void shouldUpdateTaskStatusToInDone() throws IOException {
+        Task task = createTask();
+        manager.createNewTask(task);
+        task.setStatusOfTask(StatusOfTask.DONE);
+        manager.updateTask(task);
+        assertEquals(StatusOfTask.DONE, manager.getTaskById(task.getId()).getStatusOfTask());
     }
 
     @Test
-    void getEpicById() {
+    public void shouldUpdateEpicStatusToInDone() throws IOException {
+        Epic epic = createEpic();
+        manager.createNewEpic(epic);
+        epic.setStatusOfTask(StatusOfTask.DONE);
+        assertEquals(StatusOfTask.DONE, manager.getEpicById(epic.getId()).getStatusOfTask());
     }
 
     @Test
-    void getSubtaskById() {
+    public void shouldUpdateSubtaskStatusToInDone() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        subtask.setStatusOfTask(StatusOfTask.DONE);
+        manager.updateSubtask(subtask);
+        assertEquals(StatusOfTask.DONE, manager.getSubtaskById(subtask.getId()).getStatusOfTask());
+        assertEquals(StatusOfTask.DONE, manager.getEpicById(epic.getId()).getStatusOfTask());
     }
 
     @Test
-    void createNewTask() {
+    public void shouldNotUpdateTaskIfNull() throws IOException {
+        Task task = createTask();
+        manager.createNewTask(task);
+        manager.updateTask(null);
+        assertEquals(task, manager.getTaskById(task.getId()));
     }
 
     @Test
-    void createNewEpic() {
+    public void shouldNotUpdateEpicIfNull() throws IOException {
+        Epic epic = createEpic();
+        manager.createNewEpic(epic);
+        manager.updateEpic(null);
+        assertEquals(epic, manager.getEpicById(epic.getId()));
     }
 
     @Test
-    void createNewSubtask() {
+    public void shouldNotUpdateSubtaskIfNull() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        manager.updateSubtask(null);
+        assertEquals(subtask, manager.getSubtaskById(subtask.getId()));
     }
 
     @Test
-    void updateTask() {
+    public void shouldDeleteAllTasks() throws IOException {
+        Task task = createTask();
+        manager.createNewTask(task);
+        manager.deleteAllTasks();
+        assertEquals(Collections.EMPTY_LIST, manager.getAllTasks());
     }
 
     @Test
-    void updateEpic() {
+    public void shouldDeleteAllEpics() throws IOException {
+        Epic epic = createEpic();
+        manager.createNewEpic(epic);
+        manager.deleteAllEpics();
+        assertEquals(Collections.EMPTY_LIST, manager.getAllEpics());
     }
 
     @Test
-    void updateSubtask() {
+    public void shouldDeleteAllSubtasks() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        manager.deleteAllSubtasks();
+        assertTrue(epic.getListSubtask().isEmpty());
+        assertTrue(manager.getAllSubtasks().isEmpty());
     }
 
     @Test
-    void deleteTaskById() {
-    }
+    public void shouldDeleteAllSubtasksByEpic() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        manager.deleteAllSubtasksByEpic(epic);
 
-    @Test
-    void deleteEpicById() {
+        assertTrue(manager.getAllSubtasks().isEmpty());
     }
+//
+//    @Test
+//    public void shouldDeleteTaskById() {
+//        Task task = createTask();
+//        manager.createTask(task);
+//        manager.deleteTaskById(task.getId());
+//        assertEquals(Collections.EMPTY_LIST, manager.getAllTasks());
+//    }
+//
+//    @Test
+//    public void shouldDeleteEpicById() {
+//        Epic epic = createEpic();
+//        manager.createEpic(epic);
+//        manager.deleteEpicById(epic.getId());
+//        assertEquals(Collections.EMPTY_LIST, manager.getAllEpics());
+//    }
+//
+//    @Test
+//    public void shouldNotDeleteTaskIfBadId() {
+//        Task task = createTask();
+//        manager.createTask(task);
+//        manager.deleteTaskById(999);
+//        assertEquals(List.of(task), manager.getAllTasks());
+//    }
+//
+//    @Test
+//    public void shouldNotDeleteEpicIfBadId() {
+//        Epic epic = createEpic();
+//        manager.createEpic(epic);
+//        manager.deleteEpicById(999);
+//        assertEquals(List.of(epic), manager.getAllEpics());
+//    }
+//
+//    @Test
+//    public void shouldNotDeleteSubtaskIfBadId() {
+//        Epic epic = createEpic();
+//        manager.createEpic(epic);
+//        Subtask subtask = createSubtask(epic);
+//        manager.createSubtask(subtask);
+//        manager.deleteSubtaskById(999);
+//        assertEquals(List.of(subtask), manager.getAllSubtasks());
+//        assertEquals(List.of(subtask.getId()), manager.getEpicById(epic.getId()).getSubtaskIds());
+//    }
+//
+//    @Test
+//    public void shouldDoNothingIfTaskHashMapIsEmpty() {
+//        manager.deleteAllTasks();
+//        manager.deleteTaskById(999);
+//        assertEquals(0, manager.getAllTasks().size());
+//    }
+//
+//    @Test
+//    public void shouldDoNothingIfEpicHashMapIsEmpty() {
+//        manager.deleteAllEpics();
+//        manager.deleteEpicById(999);
+//        assertTrue(manager.getAllEpics().isEmpty());
+//    }
+//
+//    @Test
+//    public void shouldDoNothingIfSubtaskHashMapIsEmpty() {
+//        manager.deleteAllEpics();
+//        manager.deleteSubtaskById(999);
+//        assertEquals(0, manager.getAllSubtasks().size());
+//    }
+//
+//    @Test
+//    void shouldReturnEmptyListWhenGetSubtaskByEpicIdIsEmpty() {
+//        Epic epic = createEpic();
+//        manager.createEpic(epic);
+//        List<Subtask> subtasks = manager.getAllSubtasksByEpicId(epic.getId());
+//        assertTrue(subtasks.isEmpty());
+//    }
+//
+//    @Test
+//    public void shouldReturnEmptyListTasksIfNoTasks() {
+//        assertTrue(manager.getAllTasks().isEmpty());
+//    }
+//
+//    @Test
+//    public void shouldReturnEmptyListEpicsIfNoEpics() {
+//        assertTrue(manager.getAllEpics().isEmpty());
+//    }
+//
+//    @Test
+//    public void shouldReturnEmptyListSubtasksIfNoSubtasks() {
+//        assertTrue(manager.getAllSubtasks().isEmpty());
+//    }
+//
+//    @Test
+//    public void shouldReturnNullIfTaskDoesNotExist() {
+//        assertNull(manager.getTaskById(999));
+//    }
+//
+//    @Test
+//    public void shouldReturnNullIfEpicDoesNotExist() {
+//        assertNull(manager.getEpicById(999));
+//    }
+//
+//    @Test
+//    public void shouldReturnNullIfSubtaskDoesNotExist() {
+//        assertNull(manager.getSubtaskById(999));
+//    }
+//
+//    @Test
+//    public void shouldReturnEmptyHistory() {
+//        assertEquals(Collections.EMPTY_LIST, manager.getHistory());
+//    }
+//
+//    @Test
+//    public void shouldReturnEmptyHistoryIfTasksNotExist() {
+//        manager.getTaskById(999);
+//        manager.getSubtaskById(999);
+//        manager.getEpicById(999);
+//        assertTrue(manager.getHistory().isEmpty());
+//    }
+//
+//    @Test
+//    public void shouldReturnHistoryWithTasks() {
+//        Epic epic = createEpic();
+//        manager.createEpic(epic);
+//        Subtask subtask = createSubtask(epic);
+//        manager.createSubtask(subtask);
+//        manager.getEpicById(epic.getId());
+//        manager.getSubtaskById(subtask.getId());
+//        List<Task> list = manager.getHistory();
+//        assertEquals(2, list.size());
+//        assertTrue(list.contains(subtask));
+//        assertTrue(list.contains(epic));
+//    }
 
-    @Test
-    void deleteSubtaskById() {
-    }
-
-    @Test
-    void getAllSubtaskFromEpic() {
-    }
-
-    @Test
-    void getHistory() {
-    }
-
-    @Test
-    void getDuration() {
-    }
-
-    @Test
-    void getStartTime() {
-    }
-
-    @Test
-    void getEndTime() {
-    }
 }

@@ -17,12 +17,12 @@ public class Subtask extends Task {
     }
 
 
-    public Subtask(String title, String description, StatusOfTask status, LocalDateTime startTime, Duration duration) {
+    public Subtask(String title, String description, StatusOfTask status) {
         super(title, description, status);
     }
 
-    public Subtask(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration, LocalDateTime endTime) {
-        super(title, description, statusOfTask, startTime, duration, endTime);
+    public Subtask(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration) {
+        super(title, description, statusOfTask, startTime, duration);
     }
 
     @Override

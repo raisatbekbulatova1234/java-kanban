@@ -137,6 +137,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
+        if (task == null) {
+            System.out.println("В метод передана пустая задача! ");
+            return;
+        }
         List<Task> taskList = new ArrayList<>(taskHashMap.values());
         if (!isOverlappingWithAnyTask(task, taskList)) {
             if (taskHashMap.containsKey(task.getId())) {
@@ -151,6 +155,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
+        if (epic == null) {
+            System.out.println("В метод передана пустой эпик! ");
+            return;
+        }
         if (epicHashMap.containsKey(epic.getId())) {
             epicHashMap.put(epic.getId(), epic);
         } else {
@@ -160,6 +168,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
+        if (subtask == null) {
+            System.out.println("В метод передана пустая подзадача! ");
+            return;
+        }
+        int epicId = subtask.getEpicId();
         List<Subtask> subtasks = new ArrayList<>(subtaskHashMap.values());
         if (!isOverlappingWithAnyTask(subtask, subtasks)) {
             if (subtaskHashMap.containsKey(subtask.getId())) {
@@ -168,11 +181,12 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("Такой подзадачи не существует! Проверь еще раз)");
                 return;
             }
-            int epicId = subtask.getEpicId();
-            updateEpicStatus(epicId);
+            epicId = subtask.getEpicId();
+
         } else {
             System.out.println("Ошибка: задача пересекается с другой задачей.");
         }
+        updateEpicStatus(epicId);
     }
 
     @Override
@@ -283,6 +297,15 @@ public class InMemoryTaskManager implements TaskManager {
                 .orElse(null); // Находим максимальное время окончания
 
         return maxEndTime;
+    }
+
+    @Override
+    public void deleteAllSubtasksByEpic(Epic epic) {
+        for (Subtask subtask : subtaskHashMap.values()) {
+            if (subtask.getEpicId() == epic.getId())
+                subtaskHashMap.remove(subtask.getId());
+            updateEpicStatus(epic.getId());
+        }
     }
 
     public List<Task> getPrioritizedTasks() {

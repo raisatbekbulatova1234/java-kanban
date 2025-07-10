@@ -58,4 +58,6 @@ public interface TaskManager {
     LocalDateTime getStartTime(Epic epic);
 
     LocalDateTime getEndTime(Epic epic);
+
+    void deleteAllSubtasksByEpic(Epic epic);
 }
