@@ -1,7 +1,6 @@
 package managers;
 
 import enums.StatusOfTask;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,14 +71,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(List.of(subtask), subtasks);
         assertEquals(List.of(subtask.getId()), epic.getListSubtask());
     }
-
-    @Test
-    void shouldReturnNullWhenCreateTaskNull() throws IOException {
-        Task task = null;
-        manager.createNewTask(task);
-        assertNull(task);
-    }
-
 
     @Test
     public void shouldUpdateTaskStatusToInProgress() throws IOException {
@@ -209,134 +199,135 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         assertTrue(manager.getAllSubtasks().isEmpty());
     }
-//
-//    @Test
-//    public void shouldDeleteTaskById() {
-//        Task task = createTask();
-//        manager.createTask(task);
-//        manager.deleteTaskById(task.getId());
-//        assertEquals(Collections.EMPTY_LIST, manager.getAllTasks());
-//    }
-//
-//    @Test
-//    public void shouldDeleteEpicById() {
-//        Epic epic = createEpic();
-//        manager.createEpic(epic);
-//        manager.deleteEpicById(epic.getId());
-//        assertEquals(Collections.EMPTY_LIST, manager.getAllEpics());
-//    }
-//
-//    @Test
-//    public void shouldNotDeleteTaskIfBadId() {
-//        Task task = createTask();
-//        manager.createTask(task);
-//        manager.deleteTaskById(999);
-//        assertEquals(List.of(task), manager.getAllTasks());
-//    }
-//
-//    @Test
-//    public void shouldNotDeleteEpicIfBadId() {
-//        Epic epic = createEpic();
-//        manager.createEpic(epic);
-//        manager.deleteEpicById(999);
-//        assertEquals(List.of(epic), manager.getAllEpics());
-//    }
-//
-//    @Test
-//    public void shouldNotDeleteSubtaskIfBadId() {
-//        Epic epic = createEpic();
-//        manager.createEpic(epic);
-//        Subtask subtask = createSubtask(epic);
-//        manager.createSubtask(subtask);
-//        manager.deleteSubtaskById(999);
-//        assertEquals(List.of(subtask), manager.getAllSubtasks());
-//        assertEquals(List.of(subtask.getId()), manager.getEpicById(epic.getId()).getSubtaskIds());
-//    }
-//
-//    @Test
-//    public void shouldDoNothingIfTaskHashMapIsEmpty() {
-//        manager.deleteAllTasks();
-//        manager.deleteTaskById(999);
-//        assertEquals(0, manager.getAllTasks().size());
-//    }
-//
-//    @Test
-//    public void shouldDoNothingIfEpicHashMapIsEmpty() {
-//        manager.deleteAllEpics();
-//        manager.deleteEpicById(999);
-//        assertTrue(manager.getAllEpics().isEmpty());
-//    }
-//
-//    @Test
-//    public void shouldDoNothingIfSubtaskHashMapIsEmpty() {
-//        manager.deleteAllEpics();
-//        manager.deleteSubtaskById(999);
-//        assertEquals(0, manager.getAllSubtasks().size());
-//    }
-//
-//    @Test
-//    void shouldReturnEmptyListWhenGetSubtaskByEpicIdIsEmpty() {
-//        Epic epic = createEpic();
-//        manager.createEpic(epic);
-//        List<Subtask> subtasks = manager.getAllSubtasksByEpicId(epic.getId());
-//        assertTrue(subtasks.isEmpty());
-//    }
-//
-//    @Test
-//    public void shouldReturnEmptyListTasksIfNoTasks() {
-//        assertTrue(manager.getAllTasks().isEmpty());
-//    }
-//
-//    @Test
-//    public void shouldReturnEmptyListEpicsIfNoEpics() {
-//        assertTrue(manager.getAllEpics().isEmpty());
-//    }
-//
-//    @Test
-//    public void shouldReturnEmptyListSubtasksIfNoSubtasks() {
-//        assertTrue(manager.getAllSubtasks().isEmpty());
-//    }
-//
-//    @Test
-//    public void shouldReturnNullIfTaskDoesNotExist() {
-//        assertNull(manager.getTaskById(999));
-//    }
-//
-//    @Test
-//    public void shouldReturnNullIfEpicDoesNotExist() {
-//        assertNull(manager.getEpicById(999));
-//    }
-//
-//    @Test
-//    public void shouldReturnNullIfSubtaskDoesNotExist() {
-//        assertNull(manager.getSubtaskById(999));
-//    }
-//
-//    @Test
-//    public void shouldReturnEmptyHistory() {
-//        assertEquals(Collections.EMPTY_LIST, manager.getHistory());
-//    }
-//
-//    @Test
-//    public void shouldReturnEmptyHistoryIfTasksNotExist() {
-//        manager.getTaskById(999);
-//        manager.getSubtaskById(999);
-//        manager.getEpicById(999);
-//        assertTrue(manager.getHistory().isEmpty());
-//    }
-//
-//    @Test
-//    public void shouldReturnHistoryWithTasks() {
-//        Epic epic = createEpic();
-//        manager.createEpic(epic);
-//        Subtask subtask = createSubtask(epic);
-//        manager.createSubtask(subtask);
-//        manager.getEpicById(epic.getId());
-//        manager.getSubtaskById(subtask.getId());
-//        List<Task> list = manager.getHistory();
-//        assertEquals(2, list.size());
-//        assertTrue(list.contains(subtask));
-//        assertTrue(list.contains(epic));
-//    }
+
+    @Test
+    public void shouldDeleteTaskById() throws IOException {
+        Task task = createTask();
+        manager.createNewTask(task);
+        manager.deleteTaskById(task.getId());
+        assertEquals(Collections.EMPTY_LIST, manager.getAllTasks());
+    }
+
+    @Test
+    public void shouldDeleteEpicById() throws IOException {
+        Epic epic = createEpic();
+        manager.createNewEpic(epic);
+        manager.deleteEpicById(epic.getId());
+        assertEquals(Collections.EMPTY_LIST, manager.getAllEpics());
+    }
+
+    @Test
+    public void shouldNotDeleteTaskIfBadId() throws IOException {
+        Task task = createTask();
+        manager.createNewTask(task);
+        manager.deleteTaskById(999);
+        assertEquals(List.of(task), manager.getAllTasks());
+    }
+
+    @Test
+    public void shouldNotDeleteEpicIfBadId() throws IOException {
+        Epic epic = createEpic();
+        manager.createNewEpic(epic);
+        manager.deleteEpicById(999);
+        assertEquals(List.of(epic), manager.getAllEpics());
+    }
+
+    @Test
+    public void shouldNotDeleteSubtaskIfBadId() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        manager.deleteSubtaskById(999);
+        assertEquals(List.of(subtask), manager.getAllSubtasks());
+    }
+
+    @Test
+    public void shouldDoNothingIfTaskHashMapIsEmpty() throws IOException {
+        manager.deleteAllTasks();
+        manager.deleteTaskById(999);
+        assertEquals(0, manager.getAllTasks().size());
+    }
+
+    @Test
+    public void shouldDoNothingIfEpicHashMapIsEmpty() throws IOException {
+        manager.deleteAllEpics();
+        manager.deleteEpicById(999);
+        assertEquals(0, manager.getAllEpics().size());
+    }
+
+    @Test
+    public void shouldDoNothingIfSubtaskHashMapIsEmpty() throws IOException {
+        manager.deleteAllSubtasks();
+        manager.deleteSubtaskById(999);
+        assertEquals(0, manager.getAllSubtasks().size());
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenGetSubtaskByEpicIdIsEmpty() throws IOException {
+        Epic epic = createEpic();
+        manager.createNewEpic(epic);
+        List<Subtask> subtasks = manager.getAllSubtaskFromEpic(epic.getId());
+        assertTrue(subtasks.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnEmptyListTasksIfNoTasks() {
+        assertTrue(manager.getAllTasks().isEmpty());
+    }
+
+    @Test
+    public void shouldReturnEmptyListEpicsIfNoEpics() {
+        assertTrue(manager.getAllEpics().isEmpty());
+    }
+
+    @Test
+    public void shouldReturnEmptyListSubtasksIfNoSubtasks() {
+        assertTrue(manager.getAllSubtasks().isEmpty());
+    }
+
+    @Test
+    public void shouldReturnNullIfTaskDoesNotExist() {
+        assertNull(manager.getTaskById(999));
+    }
+
+    @Test
+    public void shouldReturnNullIfEpicDoesNotExist() {
+        assertNull(manager.getEpicById(999));
+    }
+
+    @Test
+    public void shouldReturnNullIfSubtaskDoesNotExist() {
+        assertNull(manager.getSubtaskById(999));
+    }
+
+    @Test
+    public void shouldReturnEmptyHistory() {
+        assertEquals(Collections.EMPTY_LIST, manager.getHistory());
+    }
+
+    @Test
+    public void shouldReturnEmptyHistoryIfTasksNotExist() {
+        manager.getTaskById(999);
+        manager.getSubtaskById(999);
+        manager.getEpicById(999);
+        assertTrue(manager.getHistory().isEmpty());
+    }
+
+    @Test
+    public void shouldReturnHistoryWithTasks() throws IOException {
+        Epic epic = createEpic();
+        epic.setListSubtask(new ArrayList<>());
+        manager.createNewEpic(epic);
+        Subtask subtask = createSubtask();
+        manager.createNewSubtask(subtask);
+        manager.getEpicById(epic.getId());
+        manager.getSubtaskById(subtask.getId());
+        List<Task> list = manager.getHistory();
+        assertEquals(2, list.size());
+        assertTrue(list.contains(subtask));
+        assertTrue(list.contains(epic));
+    }
 
 }
