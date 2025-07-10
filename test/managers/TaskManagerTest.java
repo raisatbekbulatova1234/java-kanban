@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 public abstract class TaskManagerTest<T extends TaskManager> {
 
     protected T manager;
-  //  protected abstract T createManager();
-
+    
     protected Task createTask() {
         return new Task("Title", "Description", StatusOfTask.NEW, LocalDateTime.now(), Duration.ofMinutes(10000));
     }
