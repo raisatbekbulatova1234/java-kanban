@@ -33,16 +33,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return counterOfTasks;
     }
 
-    private String taskToString(Task task) {
-        if (task instanceof Subtask) {
-            return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
-                    task.getDescription(), task.getStatusOfTask(), ((Subtask) task).getEpicId(), task.getStartTime(), task.getDuration(), task.getEndTime());
-        } else {
-            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
-                    task.getDescription(), task.getStatusOfTask(), task.getStartTime(), task.getDuration(), task.getEndTime());
-
-        }
-    }
+//    private String taskToString(Task task) {
+//        if (task instanceof Subtask) {
+//            return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
+//                    task.getDescription(), task.getStatusOfTask(), ((Subtask) task).getEpicId(), task.getStartTime(), task.getDuration(), task.getEndTime());
+//        } else {
+//            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", task.getId(), task.getTypeOfTasks(), task.getTitle(),
+//                    task.getDescription(), task.getStatusOfTask(), task.getStartTime(), task.getDuration(), task.getEndTime());
+//
+//        }
+//    }
 
 
     private static Task taskFromString(String value) {
@@ -118,13 +118,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.write(s + "\n");
             }
             for (Task task : getAllTasks()) {
-                writer.write(taskToString(task) + "\n");
+                writer.write(task.toString() + "\n");
             }
             for (Epic epic : getAllEpics()) {
-                writer.write(taskToString(epic) + "\n");
+                writer.write(epic.toString() + "\n");
             }
             for (Subtask subtask : getAllSubtasks()) {
-                writer.write(taskToString(subtask) + "\n");
+                writer.write(subtask.toString() + "\n");
             }
 
         } catch (IOException e) {

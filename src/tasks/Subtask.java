@@ -44,16 +44,6 @@ public class Subtask extends Task {
     }
 
     @Override
-    public String toString() {
-        return "Подзадача { " +
-                " id = " + super.getId() +
-                " название = " + super.getTitle() +
-                ", описание = " + super.getDescription() +
-                ", статус подзадачи = " + super.getStatusOfTask() +
-                '}';
-    }
-
-    @Override
     public TypeOfTasks getTypeOfTasks() {
         return TypeOfTasks.SUBTASK;
     }

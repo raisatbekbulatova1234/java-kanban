@@ -35,17 +35,6 @@ public class Epic extends Task {
     }
 
     @Override
-    public String toString() {
-        return "Эпик { " +
-                "название = " + super.getTitle() +
-                ", " + "описание = " + super.getDescription() +
-                ", " + "id = " + super.getId() + ", " +
-                "количество подзадач = " + listSubtask.size() +
-                ", статус эпика = " + super.getStatusOfTask() +
-                '}';
-    }
-
-    @Override
     public TypeOfTasks getTypeOfTasks() {
         return TypeOfTasks.EPIC;
     }

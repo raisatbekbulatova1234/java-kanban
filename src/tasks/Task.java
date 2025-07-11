@@ -95,18 +95,19 @@ public class Task implements Comparable<Task> {
 
     @Override
     public String toString() {
-        return "Задача { " +
-                "название = " + title +
-                ", описание = '" + description +
-                ", id = " + id +
-                ", статус задачи = " + statusOfTask +
-                '}';
+        if (this.getTypeOfTasks().equals(TypeOfTasks.SUBTASK)) {
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", this.getId(), this.getTypeOfTasks(), this.getTitle(),
+                    this.getDescription(), this.getStatusOfTask(), ((Subtask) this).getEpicId(), this.getStartTime(), this.getDuration(), this.getEndTime());
+        } else {
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", this.getId(), this.getTypeOfTasks(), this.getTitle(),
+                    this.getDescription(), this.getStatusOfTask(), this.getStartTime(), this.getDuration(), this.getEndTime());
+
+        }
     }
 
     public TypeOfTasks getTypeOfTasks() {
         return TypeOfTasks.TASK;
     }
-
 
     @Override
     public int compareTo(Task other) {
