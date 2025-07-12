@@ -44,6 +44,13 @@ public class Subtask extends Task {
     }
 
     @Override
+    public String toString() {
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", this.getId(), this.getTypeOfTasks(), this.getTitle(),
+                this.getDescription(), this.getStatusOfTask(), this.getEpicId(), this.getStartTime(), this.getDuration(), this.getEndTime());
+
+    }
+
+    @Override
     public TypeOfTasks getTypeOfTasks() {
         return TypeOfTasks.SUBTASK;
     }
