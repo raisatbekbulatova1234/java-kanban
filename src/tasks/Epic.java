@@ -1,29 +1,50 @@
 package tasks;
 
 import enums.StatusOfTask;
+import enums.TypeOfTasks;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Epic extends Task {
 
     private List<Integer> listSubtask;
 
+
     public Epic(String title, String description, List<Integer> subtaskId, StatusOfTask status) {
         super(title, description, status);
         listSubtask = subtaskId;
+    }
+
+
+    public Epic(String title, String description, StatusOfTask status) {
+        super(title, description, status);
+    }
+
+    public Epic(String title, String description, StatusOfTask statusOfTask, LocalDateTime startTime, Duration duration) {
+        super(title, description, statusOfTask, startTime, duration);
     }
 
     public List<Integer> getListSubtask() {
         return listSubtask;
     }
 
+    public void setListSubtask(List<Integer> listSubtask) {
+        this.listSubtask = listSubtask;
+    }
+
     @Override
     public String toString() {
-        return "Эпик { " +
-                "название = " + super.getTitle() +
-                ", " + "описание = " + super.getDescription() +
-                ", " + "id = " + super.getId() + ", " + '\n' +
-                "количество подзадач = " + listSubtask.size() +
-                ", статус эпика = " + super.getStatusOfTask() +
-                '}';
+
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", this.getId(), this.getTypeOfTasks(), this.getTitle(),
+                this.getDescription(), this.getStatusOfTask(), this.getStartTime(), this.getDuration(), this.getEndTime());
+
     }
+
+    @Override
+    public TypeOfTasks getTypeOfTasks() {
+        return TypeOfTasks.EPIC;
+    }
+
 }

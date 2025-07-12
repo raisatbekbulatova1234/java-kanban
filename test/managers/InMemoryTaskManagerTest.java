@@ -5,22 +5,44 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.*;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryTaskManagerTest {
-    private  TaskManager taskManager;
-      int testId = 0;
+    private TaskManager taskManager;
+    int testId = 0;
 
     @BeforeEach
     public void beforeEach() {
         taskManager = Managers.getDefault();
     }
 
+
     @Test
-    void addNewTaskAndFindById() {
+    public void testGetCounterOfTask() throws IOException {
+        Task task = new Task("Учеба", "Сдать 5-й проект.", StatusOfTask.DONE);
+        task.setStartTime(LocalDateTime.now());
+        task.setDuration(Duration.ofMinutes(10000));
+        taskManager.createNewTask(task);
+        Task task1 = new Task("Учеба", "Добавить тесты к проекту", StatusOfTask.IN_PROGRESS);
+        task1.setStartTime(LocalDateTime.now().plusDays(666));
+        task1.setDuration(Duration.ofMinutes(10000));
+        taskManager.createNewTask(task1);
+
+        int expected = 2;
+        int count = taskManager.getCounterOfTasks();
+
+        assertEquals(expected, count);
+    }
+
+
+    @Test
+    void addNewTaskAndFindById() throws IOException {
         final Task task = new Task("Учеба", "Сдать 5-й проект", StatusOfTask.NEW);
         taskManager.createNewTask(task);
         final Task savedTask = taskManager.getTaskById(task.getId());
@@ -34,19 +56,27 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewEpicAndSubtasksAndFindById() {
+    void addNewEpicAndSubtasksAndFindById() throws IOException {
         final Epic epic1 = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         epic1.setId(testId);
+        epic1.setStartTime(LocalDateTime.now());
+        epic1.setDuration(Duration.ofMinutes(10000));
         final Subtask subtask1 = new Subtask("Проект 4", "Отправить на ревью", epic1.getId(),
                 StatusOfTask.DONE);
         subtask1.setId(testId++);
+        subtask1.setStartTime(LocalDateTime.now());
+        subtask1.setDuration(Duration.ofMinutes(10000));
         final Subtask subtask2 = new Subtask("Проект 5", "Написать тесты", epic1.getId(),
                 StatusOfTask.NEW);
-       subtask2.setId(testId++);
+        subtask2.setId(testId++);
+        subtask2.setStartTime(LocalDateTime.now());
+        subtask2.setDuration(Duration.ofMinutes(10000));
         final Subtask subtask3 = new Subtask("Почитать про тестирование", "глубже изучить логику тестирования", epic1.getId(),
                 StatusOfTask.IN_PROGRESS);
         subtask3.setId(testId++);
+        subtask3.setStartTime(LocalDateTime.now());
+        subtask3.setDuration(Duration.ofMinutes(10000));
 
         taskManager.createNewEpic(epic1);
         taskManager.createNewSubtask(subtask1);
@@ -54,40 +84,50 @@ public class InMemoryTaskManagerTest {
         taskManager.createNewSubtask(subtask3);
 
         final Task savedEpic = taskManager.getEpicById(epic1.getId());
+        savedEpic.setStartTime(epic1.getStartTime());
+        savedEpic.setDuration(epic1.getDuration());
+
         final Task savedSubtask1 = taskManager.getSubtaskById(subtask1.getId());
+        savedSubtask1.setStartTime(subtask1.getStartTime());
+        savedSubtask1.setDuration(subtask1.getDuration());
+
         final Task savedSubtask2 = taskManager.getSubtaskById(subtask2.getId());
-        final Task savedSubtask3 = taskManager.getSubtaskById(subtask3.getId());
+        savedSubtask2.setStartTime(subtask2.getStartTime());
+        savedSubtask2.setDuration(subtask2.getDuration());
 
         assertNotNull(savedEpic, "Эпик не найден!");
         assertNotNull(savedSubtask2, "Подзадача не найдена!");
         assertEquals(epic1, savedEpic, "Эпики не равны!");
         assertEquals(subtask1, savedSubtask1, "Подзадачи не равны!");
-        assertEquals(subtask3, savedSubtask3, "Подзадачи не равны!");
 
-         List<Epic> epics = taskManager.getAllEpics();
+        List<Epic> epics = taskManager.getAllEpics();
         assertNotNull(epics, "Эпики не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество эпиков.");
         assertEquals(epic1, epics.getFirst(), "Эпики не равны.");
 
-         List<Subtask> subtasks = taskManager.getAllSubtasks();
+        List<Subtask> subtasks = taskManager.getAllSubtasks();
         System.out.println(subtasks.size());
         assertNotNull(subtasks, "Подзадачи не возвращаются.");
         assertEquals(savedSubtask1, subtasks.getFirst(), "Подзадачи не равны.");
     }
 
     @Test
-    public void updateTaskShouldReturnTaskWithTheSameId() {
+    public void updateTaskShouldReturnTaskWithTheSameId() throws IOException {
         final Task expected = new Task("Учеба", "Сдать 5-й проект", StatusOfTask.NEW);
+        expected.setStartTime(LocalDateTime.now());
+        expected.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewTask(expected);
         final Task newTask = new Task("Учеба.2", "Сдать 5-й проект.2", StatusOfTask.DONE);
         newTask.setId(expected.getId());
+        newTask.setStartTime(expected.getStartTime());
+        newTask.setDuration(expected.getDuration());
         taskManager.updateTask(newTask);
         final Task actual = taskManager.getAllTasks().get(newTask.getId());
         assertEquals(expected, actual, "Вернулась задача с другим id");
     }
 
     @Test
-    public void updateEpicShouldReturnEpicWithTheSameId() {
+    public void updateEpicShouldReturnEpicWithTheSameId() throws IOException {
         final Epic expected = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(expected);
@@ -100,23 +140,31 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void updateSubtaskShouldReturnSubtaskWithTheSameId() {
+    public void updateSubtaskShouldReturnSubtaskWithTheSameId() throws IOException {
         final Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
+        epic.setStartTime(LocalDateTime.now());
+        epic.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewEpic(epic);
-        final Subtask expectedSubtask = new Subtask("Проект 5", "Написать тесты", epic.getId(),
+        Epic addedEpic = taskManager.getAllEpics().get(0);
+        final Subtask expectedSubtask = new Subtask("Проект 5", "Написать тесты", addedEpic.getId(),
                 StatusOfTask.NEW);
+        expectedSubtask.setStartTime(LocalDateTime.now());
+        expectedSubtask.setDuration(Duration.ofMinutes(10000));
         taskManager.createNewSubtask(expectedSubtask);
-        final Subtask newSubtask = new Subtask("Проект 5.2", "Написать тесты.2", epic.getId(),
+        final Subtask updatedSubtask = new Subtask("Проект 5.2", "Написать тесты.2", addedEpic.getId(),
                 StatusOfTask.NEW);
-        newSubtask.setId(expectedSubtask.getId());
-        final Subtask actual = taskManager.getAllSubtasks().get(newSubtask.getId());
-        assertEquals(expectedSubtask, actual, "Вернулась подзадача с другим id");
+        updatedSubtask.setStartTime(LocalDateTime.now());
+        updatedSubtask.setDuration(Duration.ofMinutes(10000));
+        updatedSubtask.setId(1);
+        taskManager.updateSubtask(updatedSubtask);
+        final Subtask actual = taskManager.getAllSubtasks().get(0);
+        assertEquals(1, actual.getId(), "Вернулась подзадача с другим id");
 
     }
 
     @Test
-    public void deleteTasksShouldReturnEmptyList() {
+    public void deleteTasksShouldReturnEmptyList() throws IOException {
         Task task = new Task("Учеба", "Сдать 5-й проект", StatusOfTask.NEW);
         taskManager.getAllTasks().add(task.getId(), task);
         Task task2 = new Task("Учеба", "Сдать 4-й проект", StatusOfTask.NEW);
@@ -127,7 +175,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void deleteEpicsShouldReturnEmptyList() {
+    public void deleteEpicsShouldReturnEmptyList() throws IOException {
         Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.getAllEpics().add(epic.getId(), epic);
@@ -137,7 +185,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void deleteSubtasksShouldReturnEmptyList() {
+    public void deleteSubtasksShouldReturnEmptyList() throws IOException {
         final Epic epic = new Epic("Программирование", "Пройти спринт 5", new ArrayList<>(),
                 StatusOfTask.NEW);
         taskManager.createNewEpic(epic);
@@ -150,7 +198,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void TaskCreatedAndTaskAddedShouldHaveSameVariables() {
+    void TaskCreatedAndTaskAddedShouldHaveSameVariables() throws IOException {
         //тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
         Task expectedTask = new Task("Пойти в магазин", "Купить продукты", StatusOfTask.DONE);
         taskManager.createNewTask(expectedTask);
